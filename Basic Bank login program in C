@@ -1,0 +1,186 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<time.h>
+
+int userinfo(int a);
+int login();
+int registeruser();
+
+    int clid[20],wallet_bal[20];
+    char fname[20][10],lname[20][10];
+    char email[20][25],pass[20][15];
+    
+    int count=0;
+    
+void main()
+{
+    int opt;
+    printf("-------Choose an option------\n\n");
+    start:
+    printf("1. Login  or   2. Register\n");
+    scanf("%d",&opt);
+    if(opt==1)
+    {
+        login();
+        goto start;
+    }
+    else if(opt==2)
+    {
+        registeruser();
+    }
+    else
+    printf("Please choose correct option\n\n");
+    goto start;
+}
+
+
+int login()
+{
+    int loginid;
+    char password[15];
+    int i,cmp;
+    
+    printf("\n\n-------Login User-----\n\n\n");
+        printf("Enter client id:");
+        scanf("%d",&loginid);
+        for(i=0;i<=count;i++)
+        {
+            if(loginid==clid[i])
+            {
+                wrongp:
+                printf("Enter your password:");
+                scanf("%s",password);
+                cmp=strcmp(password,pass[i]);
+                if(cmp==0)
+                {
+                    printf("Login Successful\n");
+                    printf("-----[ Welcome Back %s %s ]------ \n\n\n",fname[i],lname[i]);
+                    userinfo(i);
+                }
+                else
+                {
+                    printf("Wrong Password, Try Again !\n\n");
+                    goto wrongp;
+                }
+            }
+        }
+        printf("User doesn't exist, Register new or try again !\n");
+        return 0;
+}
+
+int registeruser()
+{
+    int x,i,rem,rev=0,flag=0;
+    char tempmail[30];
+    
+    printf("-----New Registration----\n\n\n");
+          printf("Enter your first name:");
+          scanf("%s",fname[count]);
+          printf("Enter your last name:");
+          scanf("%s",lname[count]);
+          wrongemail:
+          printf("Enter your email address:");
+          scanf("%s",tempmail);
+          int len = strlen(tempmail);
+
+    // Check for minimum email length (e.g., "a@m.c")
+    if (len < 5) {
+        flag = 0;
+    } else {
+        // Check for valid email ending (".com")
+        if (tempmail[len - 1] == 'm' || tempmail[len - 1] == 'M') {
+            if (tempmail[len - 2] == 'o' || tempmail[len - 2] == 'O') {
+                if (tempmail[len - 3] == 'c' || tempmail[len - 3] == 'C') {
+                    if (tempmail[len - 4] == '.' && len >= 5) {
+                        flag = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if (flag == 1) 
+    {
+     strcpy(email[count],tempmail); 
+    } 
+    else
+    {
+        printf("Wrong Email\n");
+        goto wrongemail;
+    }
+          
+          wallet_bal[count]=0;
+          
+          srand(time(0));
+          x=rand();
+          for(i=0;i<3;i++)
+              {
+                 rem=x%10;
+                 rev=rev*10+rem;
+                 x=x/10;
+              }
+          clid[count]=rev;
+          printf("Welcome %s ! Your Client Id is %d \n",fname[count],rev);
+          printf("Create a password:");
+          scanf("%s",pass[count]);
+          printf("Registration Successful\n");
+          count++;
+}
+
+int userinfo(int a)
+{
+    
+    int act,amt,flag=0;
+    printf("       Wallet Balance= %d\n\n",wallet_bal[a]);
+    printf("Choose any action\n");
+    start:
+    printf("1. Credit\n2. Debit\n3. Main menu\n4. Account info.\n");
+    scanf("%d",&act);
+    if(act==1)
+    {
+        printf("Enter ammount to add fund:");
+        scanf("%d",&amt);
+        wallet_bal[a]=wallet_bal[a]+amt;
+        flag++;
+        
+    }
+    else if(act==2)
+    {
+        printf("Enter ammount to deduct fund:");
+        scanf("%d",&amt);
+        if(amt>wallet_bal[a])
+        {
+            printf("[Insufficient balance]\n");
+            goto start;
+        }
+        else
+        {
+           wallet_bal[a]=wallet_bal[a]-amt;
+           flag++;
+        }
+    }
+    else if(act==3)
+    {
+        return 0;
+    }
+    else if(act==4)
+    {
+         printf("      Name : %s %s\n",fname[a],lname[a]);
+         printf("      Email Address : %s\n",email[a]);
+         printf("      Password : (*********)\n");
+         printf("      Wallet Balance : %d\n",wallet_bal[a]);
+         goto start;
+    }
+    else
+    {
+        printf("Please choose correct option\n");
+        goto start;
+    }
+    if(flag==1)
+    {
+        printf("Successful ! Your new balance is %d\n",wallet_bal[a]);
+        flag=0;
+        goto start;
+    }
+}
