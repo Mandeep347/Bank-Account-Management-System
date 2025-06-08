@@ -57,3 +57,5 @@ Limitations :
 -Passwords are stored in plain text (not secure for production).
 
 Author : Mandeep Chauhan - B.Tech CSE Student (AKTU university)
+
+License : This project is open-source under the MIT License.
